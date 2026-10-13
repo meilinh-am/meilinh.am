@@ -1,0 +1,1 @@
+import Link from "next/link";export default function NotFound(){return <section className="discipline-hero"><span className="section-kicker">404 / OUTSIDE THE FRAME</span><h1>Nothing<br/>to see here.</h1><Link className="button light" href="/">Back home ↗</Link></section>;}

@@ -1,0 +1,8 @@
+"use client";
+import {useState} from "react";
+import {Upload} from "lucide-react";
+export function MediaUpload({onUpload,accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,application/pdf"}:{onUpload:(url:string)=>void;accept?:string}){
+ const [progress,setProgress]=useState<number|null>(null),[error,setError]=useState("");
+ function upload(file?:File){if(!file)return;setError("");setProgress(0);const data=new FormData();data.append("file",file);const request=new XMLHttpRequest();request.open("POST","/api/upload");request.upload.onprogress=e=>{if(e.lengthComputable)setProgress(Math.round(e.loaded/e.total*100))};request.onload=()=>{setProgress(null);try{const result=JSON.parse(request.responseText);if(request.status>=400)throw new Error(result.error);onUpload(result.url);}catch(e){setError(e instanceof Error?e.message:"Upload failed")}};request.onerror=()=>{setProgress(null);setError("Upload failed. Please try again.")};request.send(data);}
+ return <div className="upload-area" onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();upload(e.dataTransfer.files[0])}}><label><Upload size={16}/>{progress===null?"Drop a file or choose a file":"Uploading "+progress+"%"}<input type="file" accept={accept} disabled={progress!==null} onChange={e=>upload(e.target.files?.[0])}/></label>{progress!==null&&<progress value={progress} max={100}/>}<small>Images / PDF: 10 MB · Videos: 50 MB</small>{error&&<p role="alert">{error}</p>}</div>;
+}

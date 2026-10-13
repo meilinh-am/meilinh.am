@@ -1,0 +1,1 @@
+"use client";export default function ErrorPage({reset}:{reset:()=>void}){return <section className="discipline-hero"><h1>A pause<br/>in the process.</h1><p>We couldn’t load the portfolio. Check the database connection and seed status, then try again.</p><button className="button light" onClick={reset}>Try again</button></section>;}
