@@ -9,6 +9,7 @@ const previousCopy = {
 };
 export function refreshSampleSite(site:SiteContent):SiteContent {
  const updates:Partial<SiteContent>={};
+ if(site.portrait==="/images/meilinh-am.jpg") updates.portrait=sampleSite.portrait;
  for(const key of ["role","intro","workTitle","aboutText","seoDescription"] as const){
   if(site[key]===previousCopy[key]) updates[key]=sampleSite[key];
  }

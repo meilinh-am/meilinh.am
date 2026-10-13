@@ -25,7 +25,8 @@ export function PortfolioProvider({data,children}:{data:PortfolioData;children:R
 }
 export function Editable({path,as:Tag="span",className=""}:{path:string;as?: "span"|"p"|"h1"|"h2"|"h3";className?:string}){
  const {site,editing,setSiteValue}=usePortfolio();let value:unknown=site;for(const key of path.split("."))value=(value as Record<string,unknown>)[key];
+ const displayValue=/^h[123]$/.test(Tag)?String(value??"").replace(/\s*\r?\n\s*/g," "):String(value??"");
  const element=useRef<HTMLElement|null>(null);
- useEffect(()=>{if(element.current && document.activeElement!==element.current)element.current.innerText=String(value??"");},[value]);
- return <Tag ref={element as React.Ref<never>} className={className+(editing?" editable":"")} contentEditable={editing} suppressContentEditableWarning role={editing?"textbox":undefined} aria-label={editing?"Edit "+path:undefined} onBlur={e=>{if(editing && e.currentTarget.innerText!==value)setSiteValue(path,e.currentTarget.innerText)}} onPaste={e=>{if(editing){e.preventDefault();document.execCommand("insertText",false,e.clipboardData.getData("text/plain"));}}}>{String(value??"")}</Tag>;
+ useEffect(()=>{if(element.current && document.activeElement!==element.current)element.current.innerText=displayValue;},[displayValue]);
+ return <Tag ref={element as React.Ref<never>} className={className+(editing?" editable":"")} contentEditable={editing} suppressContentEditableWarning role={editing?"textbox":undefined} aria-label={editing?"Edit "+path:undefined} onBlur={e=>{if(editing && e.currentTarget.innerText!==displayValue)setSiteValue(path,e.currentTarget.innerText)}} onPaste={e=>{if(editing){e.preventDefault();document.execCommand("insertText",false,e.clipboardData.getData("text/plain"));}}}>{displayValue}</Tag>;
 }

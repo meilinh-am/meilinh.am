@@ -40,7 +40,7 @@ try {
   const xml = await sitemap.text();
   assert.match(xml, /\/photography<\/loc>/);
   assert.doesNotMatch(xml, /\/ui-ux<\/loc>/);
-  assert.equal((await request("/images/meilinh-am.jpg")).status, 200, "Portrait asset");
+  assert.equal((await request("/images/meilinh-am.png")).status, 200, "Portrait asset");
   for (const path of ["/api/manage", "/api/upload"]) {
     const response = await fetch(base + path, {method: "POST", headers: {Origin: base, "Content-Type": "application/json"}, body: "{}", signal: AbortSignal.timeout(10000)});
     assert.equal(response.status, 401, `${path} requires authentication`);

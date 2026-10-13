@@ -4,7 +4,7 @@ export const sampleSite: SiteContent = {
  name: "Meilinh Am", mark: "ma.", role: "Portfolio", availability: "Open for collaborations",
  heroLine1: "Meilinh Am", heroLine2: "Marketing / Graphic design", heroLine3: "Photography",
  intro: "Inspired by soft light, architecture, late nights, and timeless moments.",
- portrait: "/images/meilinh-am.jpg", portraitAlt: "Portrait of Meilinh Am", portraitX: 50, portraitY: 40, portraitScale: 1, composition: "rings", decorations: true,
+ portrait: "/images/meilinh-am.png", portraitAlt: "Portrait of Meilinh Am", portraitX: 50, portraitY: 40, portraitScale: 1, composition: "rings", decorations: true,
  workTitle: "A visual journal.", aboutTitle: "Curious mind.\nCreative hands.",
  aboutText: "<p>A curious mind with a love for creating, observing and seeing things from different perspectives. From visual concepts to captured moments, I find inspiration in the little things that make each story unique.</p>",
  services: [],

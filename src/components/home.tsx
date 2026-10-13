@@ -19,6 +19,7 @@ export function Home(){
     <motion.div className="hero-heading" initial={false} animate={{opacity:1}} transition={{duration:.85,ease:[.2,.8,.2,1]}}>
      <Editable as="h1" path="name"/>
      <p className="hero-roles">{pageDisciplines.map((key,index)=><span key={key}>{index>0&&<span className="role-separator" aria-hidden="true"> / </span>}<Editable path={"nav."+key}/></span>)}</p>
+     <div className="hero-intro"><Editable as="p" path="intro"/><a href="#work" className="text-link"><Editable path="labels.work"/><ArrowUpRight size={18}/></a></div>
     </motion.div>
     <motion.div className="portrait-frame" initial={false} animate={{opacity:1}} transition={{duration:1,delay:.2}}>
      {site.portrait?<Image priority src={site.portrait} alt={site.portraitAlt} fill sizes="(max-width:700px) 54vw, (max-width:1000px) 31vw, 27vw" style={{objectFit:"cover",objectPosition:site.portraitX+"% "+site.portraitY+"%",transform:"scale("+site.portraitScale+")"}}/>:<span>Your portrait here</span>}
@@ -26,7 +27,7 @@ export function Home(){
     </motion.div>
    </div>
    <div className="hero-bottom">
-    <div className="hero-intro"><Editable as="p" path="intro"/><a href="#work" className="text-link"><Editable path="labels.work"/><ArrowUpRight size={18}/></a></div>
+
     <a className="scroll-cue" href="#work"><span><Editable path="labels.scroll"/></span><ArrowDown size={20}/></a>
    </div>
   </section>

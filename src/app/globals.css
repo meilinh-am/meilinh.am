@@ -82,3 +82,75 @@ html[data-theme="light"] .hero-roles{color:#246999}
  .hero-intro>p{font-size:15px}
  .work-section>.section-kicker{font-size:7.7px}
 }
+
+/* Consistent heading scale, shared with the Portfolio label. */
+:root{--heading-size:12px}
+#main-content main :is(h1,h2,h3){font-size:var(--heading-size);font-weight:600;line-height:1.6;letter-spacing:.045em;white-space:normal;max-width:none;overflow-wrap:anywhere}
+main .hero-topline,main .section-kicker,main .work-section>.section-kicker{font-size:var(--heading-size);letter-spacing:.045em;line-height:1.6}
+main .section-kicker{align-items:baseline;gap:8px 24px;flex-wrap:wrap}
+main .section-kicker>span{white-space:nowrap;max-width:none}
+main .section-heading{margin:22px 0 30px;gap:20px;align-items:center}
+main .section-symbol{font-size:24px;line-height:1}
+main .hero-composition{display:grid;grid-template-columns:minmax(0,1fr) 26.35%;column-gap:8%;align-items:center;min-height:0;margin-top:0;padding:56px 8% 36px 0}
+main .hero-heading{width:100%;padding:0;pointer-events:auto}
+main .hero-heading h1{margin:0}
+main .hero-roles{font-size:11px;line-height:1.8;margin-top:8px}
+main .hero-intro{max-width:460px;margin-top:30px}
+main .hero-intro>p{font-size:18px;line-height:1.8;margin-bottom:24px}
+main .hero-intro .text-link{font-size:var(--heading-size)}
+main .portrait-frame{position:relative;inset:auto;width:100%;height:clamp(320px,32.06vw,532px);max-height:none;justify-self:end}
+main .hero-bottom{padding:0 0 28px;justify-content:flex-end}
+main .work-section,main .about-section{padding-top:64px;padding-bottom:64px}
+main .about-layout{grid-template-columns:minmax(0,.7fr) minmax(0,1fr);gap:8%;margin-top:32px;align-items:center}
+main .about-art{min-height:300px;padding:32px}
+main .about-art>span{font-size:42px;letter-spacing:-2px}
+main .about-layout h2{margin-bottom:20px}
+main .rich-copy{font-size:16px;line-height:1.85}
+main .discipline-hero{padding-top:48px;padding-bottom:40px}
+main .discipline-hero h1{margin:24px 0 18px}
+main .discipline-subtitle{max-width:680px}
+main .discipline-subtitle>p{font-size:16px;line-height:1.8}
+main .discipline-number{display:none}
+main .contact-layout{margin-top:30px;gap:8%;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+main .contact-layout>div>p{font-size:16px;line-height:1.8;max-width:420px;margin:20px 0}
+main .project-title-row{align-items:center;margin:24px 0;gap:24px}
+main .project-title-row>span{flex-direction:row;align-items:center;gap:14px;font-size:var(--heading-size)}
+main .project-title-row>span svg{width:24px;height:24px}
+main .project-description{font-size:16px;max-width:760px;line-height:1.8}
+main .project-blocks h2{margin-bottom:20px}
+main .login-page h1,main .manager-page h1{margin:24px 0}
+@media(max-width:1000px) and (min-width:701px){
+ main .hero-composition{grid-template-columns:minmax(0,1fr) 30.6%;column-gap:6%;padding-right:5%;padding-top:42px}
+ main .hero-intro>p{font-size:16px}
+ main .portrait-frame{height:clamp(290px,43.8vw,370px)}
+ main .about-art>span{font-size:34px}
+}
+@media(max-width:700px){
+ :root{--heading-size:9px}
+ main .hero-topline{gap:12px;align-items:baseline}
+ main .hero-topline>span{gap:6px}
+ main .hero-composition{grid-template-columns:minmax(0,1fr);gap:34px;padding:32px 0 28px}
+ main .hero-roles{font-size:8.5px;margin-top:8px}
+ main .hero-intro{max-width:none;margin-top:22px}
+ main .hero-intro>p{font-size:16px;line-height:1.8;margin-bottom:20px}
+ main .portrait-frame{width:53.55%;height:344.25px;justify-self:center}
+ main .hero-bottom{padding-bottom:24px}
+ main .work-section,main .about-section{padding-top:42px;padding-bottom:42px}
+ main .section-kicker{gap:6px 12px}
+ main .section-kicker>span:last-child{max-width:none;text-align:left}
+ main .section-heading{margin:18px 0 24px}
+ main .about-layout{grid-template-columns:minmax(0,1fr);gap:28px;margin-top:24px}
+ main .about-art{min-height:260px;padding:28px}
+ main .about-art>span{font-size:40px}
+ main .rich-copy{font-size:15px}
+ main .discipline-hero{padding-top:32px;padding-bottom:32px}
+ main .discipline-subtitle>p{font-size:15px}
+ main .contact-layout{grid-template-columns:minmax(0,1fr);gap:32px;margin-top:24px}
+ main .contact-layout>div>p{font-size:15px}
+ main .project-title-row{gap:16px}
+ main .project-description{font-size:15px}
+}
+
+main .about-orbit{width:200px;height:200px;border-width:28px;right:-80px;bottom:-70px}
+.design-overlay>span.editorial-cover-title{font-size:clamp(26px,3.6vw,52px)}
+@media(max-width:700px){.design-overlay>span.editorial-cover-title{font-size:11vw}}
