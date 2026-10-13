@@ -1,0 +1,129 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Checks and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: ci-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      AUTH_SECRET: ci-only-placeholder-not-a-production-secret
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Validate Prisma schema
+        run: npx --no-install prisma validate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/portfolio
+          DIRECT_URL: postgresql://ci:ci@localhost:5432/portfolio
+      - name: Generate Prisma client
+        run: npm run db:generate
+      - name: Generate Next.js route types
+        run: npx --no-install next typegen
+      - name: Type check
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      - name: Build production application
+        run: npm run build
+      - name: Smoke test production server
+        run: npm run test:smoke
+
+  deploy:
+    name: Deploy to Vercel
+    needs: ci
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/master') ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: ${{ github.event_name == 'pull_request' && 'preview' || 'production' }}
+      url: ${{ steps.publish.outputs.url }}
+    concurrency:
+      group: vercel-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'production' }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TARGET: ${{ github.event_name == 'pull_request' && 'preview' || 'production' }}
+      DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Check deployment credentials
+        shell: bash
+        run: |
+          for name in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Set $name in GitHub Actions secrets. See docs/ci-cd.md."
+              exit 1
+            fi
+          done
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Vercel CLI
+        run: npm install --global vercel@63.1.2
+      - name: Pull Vercel environment and project settings
+        run: vercel pull --yes --environment="$VERCEL_TARGET" --git-branch="$DEPLOY_BRANCH" --token="$VERCEL_TOKEN"
+      - name: Generate Prisma client
+        run: npm run db:generate
+      - name: Apply database migrations
+        if: vars.RUN_DATABASE_MIGRATIONS == 'true'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        shell: bash
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$DIRECT_URL" ]; then
+            echo "::error::Database migrations require DATABASE_URL and DIRECT_URL environment secrets."
+            exit 1
+          fi
+          npm run db:deploy
+      - name: Build Vercel artifacts
+        shell: bash
+        run: |
+          if [ "$VERCEL_TARGET" = production ]; then
+            vercel build --prod --token="$VERCEL_TOKEN"
+          else
+            vercel build --token="$VERCEL_TOKEN"
+          fi
+      - name: Publish deployment
+        id: publish
+        shell: bash
+        run: |
+          if [ "$VERCEL_TARGET" = production ]; then
+            url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          else
+            url=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN")
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          printf '### Vercel deployment\n\n[%s](%s)\n' "$VERCEL_TARGET" "$url" >> "$GITHUB_STEP_SUMMARY"

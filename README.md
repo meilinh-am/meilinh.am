@@ -101,3 +101,7 @@ Security tests cover rich-text sanitization, content contracts, unsafe links, du
 - .env.example — configuration template
 
 Sample photographs are served from Unsplash; they are illustrative assets, not the owner's photography. Replace them with owned or properly licensed media before launching. No client claims, testimonials, or campaign metrics have been invented.
+
+## CI/CD
+
+GitHub Actions runs checks and deploys to Vercel: pull requests get previews and pushes to master deploy to production after checks pass. See [setup and secrets](docs/ci-cd.md).
