@@ -27,7 +27,7 @@ try {
     await new Promise(resolve => setTimeout(resolve, 500));
   }
   assert.ok(ready, "Production server did not become ready");
-  for (const path of ["/", "/marketing", "/graphic-design", "/photography", "/projects/form-and-feeling", "/projects/a-moment-in-between", "/owner/login"]) {
+  for (const path of ["/", "/marketing", "/graphic-design", "/photography", "/contact", "/projects/form-and-feeling", "/projects/a-moment-in-between", "/owner/login"]) {
     const response = await request(path);
     assert.equal(response.status, 200, path);
     const html = await response.text();
