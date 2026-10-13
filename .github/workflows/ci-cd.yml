@@ -93,7 +93,13 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@63.1.2
       - name: Pull Vercel environment and project settings
-        run: vercel pull --yes --environment="$VERCEL_TARGET" --git-branch="$DEPLOY_BRANCH" --token="$VERCEL_TOKEN"
+        shell: bash
+        run: |
+          if [ "$VERCEL_TARGET" = production ]; then
+            vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+          else
+            vercel pull --yes --environment=preview --git-branch="$DEPLOY_BRANCH" --token="$VERCEL_TOKEN"
+          fi
       - name: Generate Prisma client
         run: npm run db:generate
       - name: Apply database migrations
